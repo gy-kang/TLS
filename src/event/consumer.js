@@ -1,6 +1,7 @@
 
 var amqp = require('amqp');
-var {insert_active_data} = require('../db/insert_data')
+var {insert_active_data} = require('../db/insert_active_data');
+var {insert_water_data} = require('../db/insert_water_data');
 var consumer = {};
 
 consumer = async function()
@@ -94,7 +95,7 @@ var convert = async function(device_Id, time, data)
       var sensor_data = 1;
       var sensor_type = "water";
       var sensor_time = formattedTime;
-      insert_data(sensor_type, device_Id, sensor_time);
+      insert_water_data(sensor_type, device_Id, sensor_time);
     }
     else if(data == "pir")
     {

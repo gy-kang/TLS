@@ -1,6 +1,6 @@
 var db_sql = require('./db_sql.js');
 
-async function insert_env_data(sensor_Obj){
+async function insert_env_data(sensor_node_id, sensor_Obj){
   var dt = new Date();
 
   dt.add({hours: 9});
@@ -28,8 +28,9 @@ async function insert_env_data(sensor_Obj){
     var sensor_type = sensor_Json.list[i].sensor_type;
     var sensor_data = sensor_Json.list[i].data;
     var sensor_time = sensor_Json.time;
+    var node_id = sensor_node_id;
 
-    var query_check_sensor = 'select count(*) AS count, system_type, alert_min_data, alert_max_data from square_sensor_list_tb where sensor_type ="' + sensor_type + '" and system_type = (select system_type from square_system_serial_tb where system_id = (select system_id from square_node_serial_tb where node_id = "'+ node_id + '"))';
+    var query_check_sensor = 'select count(*) AS count, system_type, alert_min_data, alert_max_data from square_sensor_setting_tb where sensor_type ="' + sensor_type + '" and system_type = (select system_type from square_system_serial_tb where system_id = (select system_id from square_node_serial_tb where node_id = "' + node_id + '"))';
     
     const rows = await db_sql.square_query(query_check_sensor);
     

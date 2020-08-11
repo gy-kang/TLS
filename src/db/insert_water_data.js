@@ -4,8 +4,11 @@ async function insert_water_data(sensor_type, device_Id, sensor_time)
 {
   var query_search_nodeid = 'select node_id from square_sensor_list_tb where device_id = "' + device_Id + '"';
   const query_nodeid_rows = await db_sql.square_query(query_search_nodeid);
-  var node_id = query_nodeid_rows;
-  var query_check_sensor = 'select count(*) AS count, system_type, alert_min_data, alert_max_data from square_sensor_list_tb where sensor_type ="' + sensor_type + '" and system_type = (select system_type from square_system_serial_tb where system_id = (select system_id from square_node_serial_tb where node_id = "'+ node_id + '"))';
+  var node_id = query_nodeid_rows[0].node_id;
+
+  console.log(node_id);
+
+  var query_check_sensor = 'select count(*) AS count, system_type, alert_min_data, alert_max_data from square_sensor_setting_tb where sensor_type ="' + sensor_type + '" and system_type = (select system_type from square_system_serial_tb where system_id = (select system_id from square_node_serial_tb where node_id = "'+ node_id + '"))';
   const rows = await db_sql.square_query(query_check_sensor);
   if(rows[0].count == 1 && sensor_type == "water")
   {

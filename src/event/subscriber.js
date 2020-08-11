@@ -1,6 +1,6 @@
 
 var MQTT = require("mqtt");
-var {insert_active_data} = require('../db/insert_data')
+var {insert_active_data} = require('../db/insert_active_data')
 var subscriber = {};
 
 subscriber = async function()

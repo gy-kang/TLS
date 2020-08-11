@@ -1,8 +1,9 @@
 var request = require('request');
+var {insert_env_data} = require('../../db/insert_env_data');
 
 var app_api = {};
 
-app_api.post_Things = function(sensor_device_id)
+app_api.post_Things = function(sensor_node_id, sensor_device_id)
 {
      var options = 
     {
@@ -17,11 +18,9 @@ app_api.post_Things = function(sensor_device_id)
     {
       if (error) throw new Error(error);
       const sensor_Obj = JSON.parse(response.body);
-      const result = insert_data(sensor_Obj);
+      const result = insert_env_data(sensor_node_id, sensor_Obj);
     });
 }
-
-
 
 module.exports = app_api;
 
