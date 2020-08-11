@@ -2,12 +2,9 @@ var request = require('request');
 
 var app_api = {};
 
-app_api.post_Things = function(sensor_nodeId, sensor_device_id)
+app_api.post_Things = function(sensor_device_id)
 {
-  var device_id = "";
-  console.log("flag");
-
-    var options = 
+     var options = 
     {
       'method': 'GET',
       'url': 'https://goqual.io/openapi/device/' + sensor_device_id,
