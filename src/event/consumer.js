@@ -1,6 +1,6 @@
 
 var amqp = require('amqp');
-var {insert_data} = require('../db/insert_data')
+var {insert_active_data} = require('../db/insert_data')
 var consumer = {};
 
 consumer = async function()
@@ -25,23 +25,24 @@ consumer = async function()
       , vhost: '/'
       , noDelay: true
       , ssl: {enabled : true}
-    },implOpts);
+    }, implOpts);
 
 
   connection.on('ready', function (error) 
   {
     var q = connection.queue('0483f779468c4f89ab1c90d09e676548', {autoDelete:false, noDeclare:true}, function (queue) {
+      
       console.log('Queue ' + queue.name + ' is open');
+      
       q.subscribe(function(msg){
         console.log("receive");
         console.log(msg.deviceDataReport);
         var device_Id = msg.deviceDataReport.devId;
-        if(device_Id == "ebfd79723dd5afc79dyado" || device_Id == "ebb0a967620b192ea7vu6g" || device_Id == "eb0bba1ea1ffef5a68y2ou" || device_Id == "ebfd4edf393ffcbe4exqgd"){
-          var time = msg.deviceDataReport.status[0].t;
-          var data = msg.deviceDataReport.status[0].value;
-          convert(device_Id, time, data);
-        }
-        })
+        var time = msg.deviceDataReport.status[0].t;
+        var data = msg.deviceDataReport.status[0].value;
+
+        convert(device_Id, time, data);
+      })
     });
   });
 
@@ -63,17 +64,6 @@ var convert = async function(device_Id, time, data)
     console.log(device_Id);
     console.log(time);
     console.log(data);
-
-    var sensor_nodeId = "";
-
-    if(device_Id == "ebfd4edf393ffcbe4exqgd" || device_Id == "eb0bba1ea1ffef5a68y2ou")
-    {
-      sensor_nodeId = "SS001";
-    }
-    else if(device_Id == "ebfd79723dd5afc79dyado" || device_Id == "ebb0a967620b192ea7vu6g")
-    {
-      sensor_nodeId = "SS004";
-    }
 
     var unix_to_time = new Date((time/1000) * 1000);
     var year = unix_to_time.getFullYear();
@@ -97,21 +87,21 @@ var convert = async function(device_Id, time, data)
     
     var formattedTime = year +""+ month.substr(-2) +""+ day.substr(-2) +""+ hours.substr(-2) +""+ minutes.substr(-2) +""+ seconds.substr(-2);
 
-    console.log(sensor_nodeId+":" + formattedTime);
+    console.log(device_Id+":" + formattedTime);
 
     if(data == true)
     {
       var sensor_data = 1;
       var sensor_type = "water";
       var sensor_time = formattedTime;
-      insert_data(sensor_type, sensor_nodeId, sensor_data, sensor_time);
+      insert_data(sensor_type, device_Id, sensor_time);
     }
     else if(data == "pir")
     {
       var sensor_data = 1;
       var sensor_type = "active";
       var sensor_time = formattedTime;
-      insert_data(sensor_type, sensor_nodeId, sensor_data, sensor_time);
+      insert_active_data(sensor_type, device_Id, sensor_time);
     }
     return "result";
   }

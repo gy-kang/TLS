@@ -4,7 +4,7 @@ var square_db = {};
 
 const pool = mariadb.createPool({
   host: 'localhost',
-  port: 9925,
+  port: 3306,
   user: 'square',
   password: 'jukeworks',
   connectionLimit: 50

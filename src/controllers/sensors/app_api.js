@@ -2,36 +2,26 @@ var request = require('request');
 
 var app_api = {};
 
-app_api.post_Things = function(sensor_nodeId, body)
+app_api.post_Things = function(sensor_nodeId, sensor_device_id)
 {
-  return new Promise(resolve => 
+  var device_id = "";
+  console.log("flag");
+
+    var options = 
     {
-    var device_id = "";
-    console.log("flag");
-    if(sensor_nodeId == 'SS001')
+      'method': 'GET',
+      'url': 'https://goqual.io/openapi/device/' + sensor_device_id,
+      'headers': {
+        'Authorization': 'Bearer 67cc73b9-a59e-490b-8b10-f09158f8c8ca',
+        'Cookie': 'JSESSIONID=7EEFDFB12BBE72CF18CDAE33D7AE3A80'
+      }
+    };
+    request(options, function (error, response) 
     {
-      device_id= 'eb8ef65427350181db4ggd';
-    }
-    else if(sensor_nodeId == 'SS004')
-    {
-      device_id = 'eb249e1ca749ec436aod9s';
-    }
-      var options = 
-      {
-        'method': 'GET',
-        'url': 'https://goqual.io/openapi/device/' + device_id,
-        'headers': {
-          'Authorization': 'Bearer 67cc73b9-a59e-490b-8b10-f09158f8c8ca',
-          'Cookie': 'JSESSIONID=7EEFDFB12BBE72CF18CDAE33D7AE3A80'
-        }
-      };
-      request(options, function (error, response) 
-      {
-        if (error) throw new Error(error);
-        const jsonObj = JSON.parse(response.body);
-        resolve(jsonObj);
-      });
-  });
+      if (error) throw new Error(error);
+      const sensor_Obj = JSON.parse(response.body);
+      const result = insert_data(sensor_Obj);
+    });
 }
 
 
