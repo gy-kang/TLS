@@ -6,7 +6,7 @@ var subscriber = {};
 subscriber = async function()
 {
 
-  const BROKER_URL = "mqtt://34.85.110.82:1883:1883";
+  const BROKER_URL = "mqtt://square.abrain.co.kr:1883";
   const TOPIC_NAME = "abrain/#";
   const CLIENT_ID = "subscribe";
 
@@ -24,14 +24,18 @@ subscriber = async function()
   {
     
     var strArray=topic.toString().split('/');
-    var sensor_device_id = strArray[1];
     var sensor_body = message.toString();
-    var timestamp = sensor_body.datatime;
+    var sensor_type = message.type;
+    var sensor_device_id = message.device;
+    var timestamp = message.time;
+
+    console.log(JSON.stringify(sensor_type)); 
+
     var sensor_data = 0;
     if (sensor_body.value == true){
       sensor_data = 1;
     }
- //   insert_active_data(sensor_type, sensor_device_id, sensor_data, timestamp);
+    insert_active_data(sensor_type, sensor_device_id, timestamp);
   }
 }
 

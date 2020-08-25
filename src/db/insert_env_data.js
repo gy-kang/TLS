@@ -2,15 +2,14 @@ var db_sql = require('./db_sql.js');
 
 async function insert_env_data(sensor_node_id, sensor_Obj){
   var dt = new Date();
-
-  dt.add({hours: 9});
   
   var time = dt.toFormat('YYYYMMDDHH24MISS');
   var temp_data = sensor_Obj.deviceState.temperature;
   var humi_data = sensor_Obj.deviceState.humidity;
-
-  console.log("here");
   
+  console.log(temp_data);
+  console.log(time);
+
   var temp_Json = {"data":temp_data, "sensor_type":"temperature"};
   var humi_Json = {"data":humi_data, "sensor_type":"humidity"};
 

@@ -1,4 +1,3 @@
-
 var amqp = require('amqp');
 var {insert_active_data} = require('../db/insert_active_data');
 var {insert_water_data} = require('../db/insert_water_data');
@@ -23,6 +22,7 @@ consumer = async function()
       , connectionTimeout: 10000
       , authMechanism: 'AMQPLAIN'
       , heartbeat: 30
+      , autoAck: true 
       , vhost: '/'
       , noDelay: true
       , ssl: {enabled : true}
@@ -32,17 +32,23 @@ consumer = async function()
   connection.on('ready', function (error) 
   {
     var q = connection.queue('0483f779468c4f89ab1c90d09e676548', {autoDelete:false, noDeclare:true}, function (queue) {
-      
+
       console.log('Queue ' + queue.name + ' is open');
       
       q.subscribe(function(msg){
+
         console.log("receive");
         console.log(msg.deviceDataReport);
-        var device_Id = msg.deviceDataReport.devId;
-        var time = msg.deviceDataReport.status[0].t;
-        var data = msg.deviceDataReport.status[0].value;
+        if(msg.deviceDataReport != null)
+        {
+          console.log(msg.deviceStatusReport);
+          var device_Id = msg.deviceDataReport.devId;
+          var time = msg.deviceDataReport.status[0].t;
+          var data = msg.deviceDataReport.status[0].value;
+          var code = msg.deviceDataReport.status[0].code;
+        }
 
-        convert(device_Id, time, data);
+        convert(device_Id, time, data, code);
       })
     });
   });
@@ -58,7 +64,7 @@ consumer = async function()
   });
 }
 
-var convert = async function(device_Id, time, data)
+var convert = async function(device_Id, time, data, code)
 {
   try
   {
@@ -69,15 +75,20 @@ var convert = async function(device_Id, time, data)
     var unix_to_time = new Date((time/1000) * 1000);
     var year = unix_to_time.getFullYear();
     var month = "0" + (unix_to_time.getMonth()+1);
-    if((unix_to_time.getHours()+9) > 23 )
+    var korea_time = (unix_to_time.getHours());
+
+    console.log(unix_to_time.getDate());
+
+    console.log(korea_time > 23);
+    if(korea_time > 23)
     {
       var day = "0" + (unix_to_time.getDate()+1);
-      var hours = "0" + (unix_to_time.getHours()+9-24);
+      var hours = "0" + (korea_time-24);
     }
     else
     {
       var day = "0" + unix_to_time.getDate();
-      var hours = "0" + (unix_to_time.getHours()+9);
+      var hours = "0" + (korea_time);
     }
     
     var minutes = "0" + unix_to_time.getMinutes();
@@ -88,7 +99,7 @@ var convert = async function(device_Id, time, data)
     
     var formattedTime = year +""+ month.substr(-2) +""+ day.substr(-2) +""+ hours.substr(-2) +""+ minutes.substr(-2) +""+ seconds.substr(-2);
 
-    console.log(device_Id+":" + formattedTime);
+    console.log(device_Id + " : " + formattedTime);
 
     if(data == true)
     {
@@ -97,12 +108,14 @@ var convert = async function(device_Id, time, data)
       var sensor_time = formattedTime;
       insert_water_data(sensor_type, device_Id, sensor_time);
     }
-    else if(data == "pir")
+    else if(code == "pir")
     {
       var sensor_data = 1;
       var sensor_type = "active";
       var sensor_time = formattedTime;
-      insert_active_data(sensor_type, device_Id, sensor_time);
+      //insert_active_data(sensor_type, device_Id, sensor_time);
+      if (data == "none") active_still_check = false;
+      else active_still_check = true;
     }
     return "result";
   }

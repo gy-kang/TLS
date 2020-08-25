@@ -1,5 +1,4 @@
 //require('dotenv').config()
-
 import bodyParser from 'body-parser'
 import createError from 'http-errors'
 import express from 'express'
@@ -9,6 +8,8 @@ import sensors from './routes/sensors'
 import {consumer} from './event/consumer'
 import {subscriber} from './event/subscriber'
 
+let active_still_check = false;
+global.active_still_check=active_still_check;
 
 class App {
 
@@ -67,7 +68,7 @@ class App {
 
     this.app.use((err, req, res,  _ ) => 
     {
-        res.status(500).render('common/500.html')
+      res.status(500).render('common/500.html')
     });
   }
 
