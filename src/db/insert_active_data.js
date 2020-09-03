@@ -2,7 +2,6 @@ var db_sql = require('./db_sql.js');
 
 async function insert_active_data(sensor_type, device_Id, sensor_time)
 {
-  console.log(device_Id);
   var query_search_nodeid = 'select node_id from square_sensor_list_tb where device_id = "' + device_Id + '"';
   const query_nodeid_rows = await db_sql.square_query(query_search_nodeid);
   var node_id = query_nodeid_rows[0].node_id;

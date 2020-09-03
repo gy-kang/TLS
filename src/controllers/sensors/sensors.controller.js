@@ -56,7 +56,7 @@ const post = async (req, res, next) =>
     }
   } catch (e) 
   {
-    console.log(e);
+    winston.debug('api error : '+ e);
     return res.status(500).json(
       {
         "timestamp": timestamp,

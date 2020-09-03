@@ -19,11 +19,15 @@
     "http-errors": "~1.6.3",
     "http-rabbitmq-manager": "0.0.4",
     "mariadb": "^2.4.0",
+    "moment": "^2.27.0",
     "morgan": "~1.9.1",
     "mqtt": "^3.0.0",
+    "os-utils": "0.0.14",
     "randomstring": "^1.1.5",
     "request": "^2.88.2",
-    "tunnel-ssh": "^4.1.4"
+    "tunnel-ssh": "^4.1.4",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

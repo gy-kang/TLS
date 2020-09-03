@@ -1,6 +1,6 @@
-
 var MQTT = require("mqtt");
-var {insert_active_data} = require('../db/insert_active_data')
+var {insert_active_data} = require('../db/insert_active_data');
+var winston = require('../config/winston');
 var subscriber = {};
 
 subscriber = async function()
@@ -23,13 +23,13 @@ subscriber = async function()
   function onMessageReceived(topic, message)
   {
     
-    var strArray=topic.toString().split('/');
-    var sensor_body = message.toString();
-    var sensor_type = message.type;
-    var sensor_device_id = message.device;
-    var timestamp = message.time;
-
-    console.log(JSON.stringify(sensor_type)); 
+    var strArray = topic.toString().split('/');
+    var string_replace = message.toString().replace(/'/gi, '\"');
+    winston.info('mqtt : ' + string_replace);
+    var sensor_body = JSON.parse(string_replace);
+    var sensor_type = sensor_body.type;
+    var sensor_device_id = sensor_body.device;
+    var timestamp = sensor_body.datatime;
 
     var sensor_data = 0;
     if (sensor_body.value == true){

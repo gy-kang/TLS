@@ -11,6 +11,7 @@ import {subscriber} from './event/subscriber'
 let active_still_check = false;
 global.active_still_check=active_still_check;
 
+
 class App {
 
   constructor() 
@@ -65,11 +66,7 @@ class App {
       return res.status(apiError.status)
         .json({message: apiError.message})
     });
-
-    this.app.use((err, req, res,  _ ) => 
-    {
-      res.status(500).render('common/500.html')
-    });
+    
   }
 
   setEvent() {
