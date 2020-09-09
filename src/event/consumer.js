@@ -36,17 +36,14 @@ consumer = async function()
       winston.info('Queue ' + queue.name + ' is open');
       
       q.subscribe(function(msg){
-
-        console.log(msg.deviceDataReport);
         if(msg.deviceDataReport != null)
         {
-          winston.info(msg.deviceStatusReport);
+          winston.info(msg.deviceDataReport);
           var device_Id = msg.deviceDataReport.devId;
           var time = msg.deviceDataReport.status[0].t;
           var data = msg.deviceDataReport.status[0].value;
           var code = msg.deviceDataReport.status[0].code;
         }
-
         convert(device_Id, time, data, code);
       })
     });
@@ -54,12 +51,12 @@ consumer = async function()
 
   connection.on('error', function (error) 
   {
-    winston.debug('Amqp error : ' + error);
+    winston.error('Amqp error : ' + error);
   });
 
   connection.on('close', function () 
   {
-    winston.debug('Amqp Connection close');
+    winston.error('Amqp Connection close');
   });
 }
 
@@ -67,18 +64,10 @@ var convert = async function(device_Id, time, data, code)
 {
   try
   {
-    console.log(device_Id);
-    console.log(time);
-    console.log(data);
-
     var unix_to_time = new Date((time/1000) * 1000);
     var year = unix_to_time.getFullYear();
     var month = "0" + (unix_to_time.getMonth()+1);
     var korea_time = (unix_to_time.getHours());
-
-    console.log(unix_to_time.getDate());
-
-    console.log(korea_time > 23);
     if(korea_time > 23)
     {
       var day = "0" + (unix_to_time.getDate()+1);
@@ -92,13 +81,7 @@ var convert = async function(device_Id, time, data, code)
     
     var minutes = "0" + unix_to_time.getMinutes();
     var seconds = "0" + unix_to_time.getSeconds();
-
-    console.log(day.substr(-2));
-    console.log(hours.substr(-2));
-    
     var formattedTime = year +""+ month.substr(-2) +""+ day.substr(-2) +""+ hours.substr(-2) +""+ minutes.substr(-2) +""+ seconds.substr(-2);
-
-    console.log(device_Id + " : " + formattedTime);
 
     if(data == true)
     {
@@ -120,7 +103,7 @@ var convert = async function(device_Id, time, data, code)
   }
   catch(e)
   {
-    winston.debug('consumer/convert error : ' + error);
+    winston.error('consumer/convert error : ' + error);
   }
 }
 

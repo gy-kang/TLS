@@ -6,10 +6,6 @@ async function insert_env_data(sensor_node_id, sensor_Obj){
   var time = dt.toFormat('YYYYMMDDHH24MISS');
   var temp_data = sensor_Obj.deviceState.temperature;
   var humi_data = sensor_Obj.deviceState.humidity;
-  
-  console.log(temp_data);
-  console.log(time);
-
   var temp_Json = {"data":temp_data, "sensor_type":"temperature"};
   var humi_Json = {"data":humi_data, "sensor_type":"humidity"};
 

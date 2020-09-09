@@ -11,14 +11,12 @@ const post = async (req, res, next) =>
     var date = new Date();
     var active_time = date.toFormat('YYYYMMDDHH24MISS');
     var timestamp = date.toFormat('YYYY-MM-DD HH24:MI:SS');
-    console.log(active_time);
     if (!node_id) 
     {
       return res.status(400).json({error: 'empty id'});
     }
     else if(node_id == "req")
     {
-      console.log(req.body);
       var req_node_id = req.body.node_id.split(',');
 
       for(var i = 0; i < req_node_id.length; i++)
@@ -38,6 +36,7 @@ const post = async (req, res, next) =>
           req_emergency_flag = req.body.emergency_flag;
 
           /*
+          //pir active
           if(active_still_check == true)
           {
             insert_active_data(req.body.data, req.body.device_id, active_time);
@@ -56,7 +55,7 @@ const post = async (req, res, next) =>
     }
   } catch (e) 
   {
-    winston.debug('api error : '+ e);
+    winston.error('api error : '+ e);
     return res.status(500).json(
       {
         "timestamp": timestamp,

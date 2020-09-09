@@ -17,7 +17,7 @@ app_api.post_Things = function(sensor_node_id, sensor_device_id)
     request(options, function (error, response) 
     {
       if (error) throw new Error(error);
-      if (error) winston.debug('goqual api error : ' + error);
+      if (error) winston.error('goqual api error : ' + error);
       const sensor_Obj = JSON.parse(response.body);
       const result = insert_env_data(sensor_node_id, sensor_Obj);
     });

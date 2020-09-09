@@ -25,8 +25,8 @@ subscriber = async function()
     
     var strArray = topic.toString().split('/');
     var string_replace = message.toString().replace(/'/gi, '\"');
-    winston.info('mqtt : ' + string_replace);
     var sensor_body = JSON.parse(string_replace);
+    winston.info('mqtt : ' + sensor_body);
     var sensor_type = sensor_body.type;
     var sensor_device_id = sensor_body.device;
     var timestamp = sensor_body.datatime;
