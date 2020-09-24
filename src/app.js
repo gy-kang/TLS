@@ -1,16 +1,14 @@
-//require('dotenv').config()
+require('dotenv').config()
 import bodyParser from 'body-parser'
 import createError from 'http-errors'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import sensors from './routes/sensors'
-import {consumer} from './event/consumer'
 import {subscriber} from './event/subscriber'
 
 let active_still_check = false;
 global.active_still_check=active_still_check;
-
 
 class App {
 
@@ -70,7 +68,6 @@ class App {
   }
 
   setEvent() {
-    consumer();
     subscriber();
   }
 }

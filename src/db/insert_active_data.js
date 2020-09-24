@@ -22,7 +22,7 @@ async function insert_active_data(sensor_type, device_Id, sensor_time)
       {
         var query_E_current_update = 'update square_lite_sensor_active_current_data_tb set check_flag = true, response_time = "' + sensor_time + '" where node_id = "' + node_id + '";';
         const query_E_current_rows = await db_sql.square_query(query_E_current_update);
-        var query_E_stat_update = 'update square_lite_sensor_active_stat_data_tb set check_flag = true, response_time = "' + sensor_time + '" where id = (select id from square_lite_sensor_active_stat_data_tb where node_id = "' + node_id + '" order by id desc limit 1);';
+        var query_E_stat_update = 'update square_lite_sensor_active_stat_data_tb set check_flag = true, response_time = "' + sensor_time + '" where id = (SELECT id FROM (select id from square_lite_sensor_active_stat_data_tb where node_id = "' + node_id + '" order by id desc limit 1) _dummy);';
         const query_E_stat_rows = await db_sql.square_query(query_E_stat_update);
         return "update_emergency_active";
       }
@@ -39,7 +39,7 @@ async function insert_active_data(sensor_type, device_Id, sensor_time)
         {
           var query_I_current_update = 'update square_lite_sensor_active_current_data_tb set check_flag = true, response_time = "' + sensor_time + '" where node_id = "' + node_id + '";';
           const query_I_current_rows = await db_sql.square_query(query_I_current_update);
-          var query_I_stat_update = 'update square_lite_sensor_active_stat_data_tb set check_flag = true, response_time = "' + sensor_time + '" where id = (select id from square_lite_sensor_active_stat_data_tb where node_id = "' + node_id + '" order by id desc limit 1);';
+          var query_I_stat_update = 'update square_lite_sensor_active_stat_data_tb set check_flag = true, response_time = "' + sensor_time + '" where id = (SELECT id FROM (select id from square_lite_sensor_active_stat_data_tb where node_id = "' + node_id + '" order by id desc limit 1) _dummy);';
           const query_I_stat_rows = await db_sql.square_query(query_I_stat_update);
           return "update_Interval_active";
         }

@@ -5,7 +5,7 @@ var publisher = {};
 
 publisher.publish_event = function(req_node_id, req_device_id, req_emergency_flag)
 {
-  const BROKER_URL = "mqtt://square.abrain.co.kr:1883";
+  const BROKER_URL = "mqtt://square.abrain.co.kr:21883";
   const TOPIC_NAME = "minael";
   const CLIENT_ID = req_device_id;
 
